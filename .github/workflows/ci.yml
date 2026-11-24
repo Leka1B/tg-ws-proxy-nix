@@ -16,13 +16,21 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            system: x86_64-linux
+          - runner: ubuntu-24.04-arm
+            system: aarch64-linux
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v32
       - name: Module option -> flag check
-        run: nix build .#checks.x86_64-linux.module-eval --print-build-logs
+        run: nix build .#checks.${{ matrix.system }}.module-eval --print-build-logs
       - name: Flake check
-        run: nix flake check --all-systems --print-build-logs
+        run: nix flake check --print-build-logs
       - name: Formatting
         run: nix fmt -- --check flake.nix pkgs/package.nix modules/nixos.nix tests/module-eval.nix

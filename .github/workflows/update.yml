@@ -28,7 +28,7 @@ jobs:
 
       - name: Check the bump
         run: |
-          nix flake check --all-systems --print-build-logs
+          nix flake check --print-build-logs
           nix fmt -- --check flake.nix pkgs/package.nix modules/nixos.nix tests/module-eval.nix
 
       - name: Open PR if anything changed

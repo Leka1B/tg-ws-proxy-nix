@@ -6,7 +6,7 @@ Nix-flake, упаковывающий [`Flowseal/tg-ws-proxy`](https://github.co
 - `tg-ws-proxy-tray` - тот же прокси с треем и GUI (GTK3/AppIndicator).
 - `services.tg-ws-proxy` - системный сервис NixOS поверх headless-CLI.
 
-Платформа: только `x86_64-linux` (aarch64 не собирается и не тестируется).
+Платформа: `x86_64-linux` и `aarch64-linux`.
 
 ## Быстрый запуск
 
@@ -117,8 +117,6 @@ nix run . -- --help
 ```
 
 После `git init` добавьте файлы через `git add` до первой сборки: Nix видит в git-репозитории только отслеживаемые файлы.
-
-`nix flake check` собирает оба варианта пакета и проверку module-eval (каждая опция → свой флаг) на `x86_64-linux`. VM-теста NixOS в v1 нет.
 
 ## Лицензия и атрибуция
 

@@ -6,7 +6,10 @@
   outputs =
     { self, nixpkgs }:
     let
-      systems = [ "x86_64-linux" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
       tgws = pkgs: {
         tg-ws-proxy = pkgs.callPackage ./pkgs/package.nix { };
