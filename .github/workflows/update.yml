@@ -43,5 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "flake: update nixpkgs input and tg-ws-proxy"
-          git push -u origin HEAD
-          gh pr create --fill --title "Update inputs and tg-ws-proxy"
+          # a re-run lands on the branch that already holds the earlier commit
+          git push --force-with-lease -u origin HEAD
+          gh pr create --fill --title "Update inputs and tg-ws-proxy" \
+            || gh pr view --json url --jq .url # PR already open for this branch
