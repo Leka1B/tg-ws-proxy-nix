@@ -24,7 +24,7 @@ jobs:
       - name: Update nixpkgs input and upstream version
         run: |
           nix flake update
-          nix run nixpkgs#nix-update -- --flake tg-ws-proxy
+          nix run github:Mic92/nix-update/v1.17.0 -- --flake tg-ws-proxy
 
       - name: Check the bump
         run: |
