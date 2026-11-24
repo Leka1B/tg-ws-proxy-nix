@@ -17,14 +17,14 @@
 python3Packages.buildPythonPackage rec {
   pname = "tg-ws-proxy";
   name = if withTray then "tg-ws-proxy-tray-${version}" else "tg-ws-proxy-${version}";
-  version = "1.11.4";
+  version = "1.12.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "Flowseal";
     repo = "tg-ws-proxy";
     rev = "v${version}";
-    hash = "sha256-N7k8D2tnO4iVFq5lXjhdKpYMR+gDsCkKZLTpACpJStY=";
+    hash = "sha256-tHT4QkUVspH5CI7EU+EqPYX0mKR69Qfmm+yvvpug5SA=";
   };
 
   build-system = [ python3Packages.hatchling ];
