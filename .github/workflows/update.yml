@@ -1,0 +1,47 @@
+name: Update
+
+# nix-update переписывает pkgs/package.nix, только если у upstream появился новый тег и что-то изменилось
+on:
+  schedule:
+    - cron: "0 5 1 * *" # раз в месяц, в 05:00 UTC, 1 числа
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v32
+
+      - name: Update nixpkgs input and upstream version
+        run: |
+          nix flake update
+          nix run nixpkgs#nix-update -- --flake tg-ws-proxy
+
+      - name: Check the bump
+        run: |
+          nix flake check --all-systems --print-build-logs
+          nix fmt -- --check flake.nix pkgs/package.nix modules/nixos.nix tests/module-eval.nix
+
+      - name: Open PR if anything changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "already up to date"
+            exit 0
+          fi
+          git switch -c update-$(date +%Y%m%d)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "flake: update nixpkgs input and tg-ws-proxy"
+          git push -u origin HEAD
+          gh pr create --fill --title "Update inputs and tg-ws-proxy"
